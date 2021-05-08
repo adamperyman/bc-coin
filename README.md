@@ -2,7 +2,7 @@
 
 A cryptocurrency and blockchain for people who enjoy butter chicken.
 
-![](https://i.imgur.com/hRqdAsu.png)
+![](https://i.imgur.com/RgVWcGo.jpg)
 
 # Demo
 
