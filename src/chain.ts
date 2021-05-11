@@ -19,40 +19,12 @@ export default class Chain {
     ];
   }
 
-  get chain (): Block[] {
-    return this._chain;
-  }
-
   get lastBlock (): Block {
     return this._chain[this._chain.length - 1];
   }
 
   get chainLength (): number {
     return this._chain.length;
-  }
-
-  addBlock (
-    transaction: Transaction,
-    senderPublicKey: string,
-    signature: Buffer,
-  ): void {
-    const verifier = crypto.createVerify('SHA256');
-    verifier.update(transaction.toString());
-
-    const isValid = verifier.verify(senderPublicKey, signature);
-
-    if (!isValid) {
-      throw createError(500, 'Failed to verify sender.', {
-        transaction: transaction.toString(),
-        senderPublicKey,
-        signature,
-      });
-    }
-
-    const newBlock = new Block(this.lastBlock.hash, transaction);
-
-    this.mine(newBlock.nonce);
-    this.chain.push(newBlock);
   }
 
   mine (nonce: number): MiningResult {
@@ -81,5 +53,29 @@ export default class Chain {
       ok: true,
       nonce,
     };
+  }
+
+  addBlock (
+    transaction: Transaction,
+    senderPublicKey: string,
+    signature: Buffer,
+  ): void {
+    const verifier = crypto.createVerify('SHA256');
+    verifier.update(transaction.toString());
+
+    const isValid = verifier.verify(senderPublicKey, signature);
+
+    if (!isValid) {
+      throw createError(500, 'Failed to verify sender.', {
+        transaction: transaction.toString(),
+        senderPublicKey,
+        signature,
+      });
+    }
+
+    const newBlock = new Block(this.lastBlock.hash, transaction);
+
+    this.mine(newBlock.nonce);
+    this._chain.push(newBlock);
   }
 }

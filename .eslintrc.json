@@ -20,6 +20,13 @@
   "rules": {
     "semi": ["error", "always"],
     "prefer-const": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/space-before-function-paren": ["error", "always"]
   }

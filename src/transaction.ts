@@ -9,18 +9,6 @@ export default class Transaction {
     this._toKey = toKey;
   }
 
-  get amount (): number {
-    return this._amount;
-  }
-
-  get fromKey (): string {
-    return this._fromKey;
-  }
-
-  get toKey (): string {
-    return this._toKey;
-  }
-
   public toString (): string {
     return JSON.stringify(this);
   }

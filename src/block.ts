@@ -16,18 +16,6 @@ export default class Block {
     return this._nonce;
   }
 
-  get timestamp (): number {
-    return this._timestamp;
-  }
-
-  get prevHash (): string {
-    return this._prevHash;
-  }
-
-  get transaction (): Transaction {
-    return this._transaction;
-  }
-
   get hash (): string {
     const blockString = JSON.stringify(this);
     const hash = crypto.createHash('SHA256');

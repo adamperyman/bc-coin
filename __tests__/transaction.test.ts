@@ -5,7 +5,7 @@ describe('Transaction', () => {
     const transaction = new Transaction(null, 'adam', 'alexsmum');
 
     expect(transaction.toString()).toEqual(
-      '{"amount":null,"fromKey":"adam","toKey":"alexsmum"}',
+      '{"_amount":null,"_fromKey":"adam","_toKey":"alexsmum"}',
     );
   });
 });
