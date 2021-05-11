@@ -19,6 +19,7 @@
   ],
   "rules": {
     "semi": ["error", "always"],
+    "prefer-const": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/space-before-function-paren": ["error", "always"]
   }

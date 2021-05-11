@@ -10,17 +10,13 @@ interface MiningResult {
 }
 
 export default class Chain {
-  private static _instance = new Chain();
+  public static instance = new Chain();
   private _chain: Block[];
 
   constructor () {
     this._chain = [
       new Block(null, new Transaction(N_SEED_COINS, 'genesis', 'self')), // Genesis block.
     ];
-  }
-
-  get instance (): Chain {
-    return Chain._instance;
   }
 
   get chain (): Block[] {
@@ -65,6 +61,7 @@ export default class Chain {
 
     console.log(`⛏️\tMining nonce: ${nonce}..\n`);
 
+    // TODO: Be smarter.
     while (isMining) {
       const hash = crypto.createHash('MD5');
       hash.update((nonce + solution).toString()).end();

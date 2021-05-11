@@ -12,27 +12,30 @@ import {
 } from './utils';
 
 export default class Wallet {
-  public publicKey: string;
-  private privateKey: string;
-
-  private currencyValues: CurrencyValueMap = {
+  private _publicKey: string;
+  private _privateKey: string;
+  private _currencyValues: CurrencyValueMap = {
     [Currencies.BC_COIN]: 0,
   };
-
-  get bcCoinValue (): number {
-    return this.currencyValues[Currencies.BC_COIN];
-  }
 
   constructor (initialDeposit?: CurrencyValueMap) {
     const keyPair = getRSAKeyPair();
 
-    this.privateKey = keyPair.privateKey;
-    this.publicKey = keyPair.publicKey;
+    this._privateKey = keyPair.privateKey;
+    this._publicKey = keyPair.publicKey;
 
-    this.currencyValues = {
-      ...this.currencyValues,
+    this._currencyValues = {
+      ...this._currencyValues,
       ...initialDeposit,
     };
+  }
+
+  get publicKey (): string {
+    return this._publicKey;
+  }
+
+  get bcCoinValue (): number {
+    return this._currencyValues[Currencies.BC_COIN];
   }
 
   transfer (
@@ -46,25 +49,25 @@ export default class Wallet {
       });
     }
 
-    if (this.currencyValues[currency] < amount) {
+    if (this._currencyValues[currency] < amount) {
       throw createError(400, 'Insufficient funds.', {
         currency,
         transactionAmount: amount,
-        availableFunds: this.currencyValues[currency],
+        availableFunds: this._currencyValues[currency],
       });
     }
 
     // Debit sender's wallet.
-    this.currencyValues[currency] -= amount;
+    this._currencyValues[currency] -= amount;
 
     // Generate signature from transaction, sign with sender's private key.
-    const transaction = new Transaction(amount, this.publicKey, toPublicKey);
-    const signature = getSignatureForTransaction(transaction, this.privateKey);
+    const transaction = new Transaction(amount, this._publicKey, toPublicKey);
+    const signature = getSignatureForTransaction(transaction, this._privateKey);
 
-    Chain.instance.addBlock(transaction, this.publicKey, signature);
+    Chain.instance.addBlock(transaction, this._publicKey, signature);
 
     // TODO: Credit payee wallet.
-    console.log(`${prettyPrintPem(this.publicKey)}\n`);
+    console.log(`${prettyPrintPem(this._publicKey)}\n`);
     console.log(`👆 SENT ${amount} ${Currencies[currency]} TO 👇\n`);
     console.log(`${prettyPrintPem(toPublicKey)}\n`);
     console.log(`${TRANSACTION_SEPARATOR}`);

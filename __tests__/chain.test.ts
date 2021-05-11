@@ -8,6 +8,20 @@ beforeAll(() => {
 });
 
 describe('Chain', () => {
+  describe('mine', () => {
+    it('should return successful when solution is found for a valid nonce', () => {
+      jest.mock('../src/chain');
+
+      const transaction = new Transaction(null, 'adam', 'alexsmum');
+      const block = new Block('prev-hash', transaction);
+
+      expect(Chain.instance.mine(block.nonce)).toEqual({
+        ok: true,
+        nonce: block.nonce,
+      });
+    });
+  });
+
   describe('addBlock', () => {
     it('should succeed with valid sender public key and valid signature', () => {
       const keyPair = getRSAKeyPair();
@@ -50,20 +64,6 @@ describe('Chain', () => {
           Buffer.from('i-am-a-signature'),
         ),
       ).toThrow('Failed to verify sender.');
-    });
-  });
-
-  describe('mine', () => {
-    it('should return successful when solution is found for a valid nonce', () => {
-      jest.mock('../src/chain');
-
-      const transaction = new Transaction(null, 'adam', 'alexsmum');
-      const block = new Block('prev-hash', transaction);
-
-      expect(Chain.instance.mine(block.nonce)).toEqual({
-        ok: true,
-        nonce: block.nonce,
-      });
     });
   });
 });
