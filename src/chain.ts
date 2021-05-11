@@ -1,6 +1,7 @@
 import * as crypto from 'crypto';
 import * as createError from 'http-errors';
 import Block from './block';
+import { N_SEED_COINS } from './constants';
 import Transaction from './transaction';
 
 interface MiningResult {
@@ -9,19 +10,29 @@ interface MiningResult {
 }
 
 export default class Chain {
-  public static instance = new Chain();
-  private chain: Block[];
+  private static _instance = new Chain();
+  private _chain: Block[];
 
   constructor () {
-    this.chain = [new Block(null, new Transaction(100, 'genesis', 'ap'))];
+    this._chain = [
+      new Block(null, new Transaction(N_SEED_COINS, 'genesis', 'self')), // Genesis block.
+    ];
+  }
+
+  get instance (): Chain {
+    return Chain._instance;
+  }
+
+  get chain (): Block[] {
+    return this._chain;
   }
 
   get lastBlock (): Block {
-    return this.chain[this.chain.length - 1];
+    return this._chain[this._chain.length - 1];
   }
 
   get chainLength (): number {
-    return this.chain.length;
+    return this._chain.length;
   }
 
   addBlock (
@@ -43,6 +54,7 @@ export default class Chain {
     }
 
     const newBlock = new Block(this.lastBlock.hash, transaction);
+
     this.mine(newBlock.nonce);
     this.chain.push(newBlock);
   }
