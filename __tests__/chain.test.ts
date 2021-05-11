@@ -9,7 +9,7 @@ beforeAll(() => {
 
 describe('Chain', () => {
   describe('addBlock', () => {
-    it('should verify valid sender public key with valid signature', () => {
+    it('should succeed with valid sender public key and valid signature', () => {
       const keyPair = getRSAKeyPair();
       const transaction = new Transaction(null, 'adam', 'alexsmum');
       const signature = getSignatureForTransaction(
@@ -22,7 +22,7 @@ describe('Chain', () => {
       expect(Chain.instance.chainLength).toEqual(2); // +1 to account for genesis block.
     });
 
-    it('should not verify invalid sender public key with valid signature', () => {
+    it('should not succeed with invalid sender public key and valid signature', () => {
       const keyPair = getRSAKeyPair();
       const transaction = new Transaction(null, 'adam', 'alexsmum');
       const signature = getSignatureForTransaction(
@@ -39,7 +39,7 @@ describe('Chain', () => {
       ).toThrow();
     });
 
-    it('should not verify valid sender public key with invalid signature', () => {
+    it('should not succeed with valid sender public key and invalid signature', () => {
       const keyPair = getRSAKeyPair();
       const transaction = new Transaction(null, 'adam', 'alexsmum');
 
@@ -54,7 +54,7 @@ describe('Chain', () => {
   });
 
   describe('mine', () => {
-    it('should return true when solution is found for a valid nonce', () => {
+    it('should return successful when solution is found for a valid nonce', () => {
       jest.mock('../src/chain');
 
       const transaction = new Transaction(null, 'adam', 'alexsmum');
